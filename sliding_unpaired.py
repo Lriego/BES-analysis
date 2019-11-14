@@ -1,4 +1,4 @@
-#!/home/cintia/anaconda3/bin/python
+#!/usr/bin/env python
 
 """A script to detect the regions with more than 2 consistent unpaired-end BESs"""
 

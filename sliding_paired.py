@@ -1,4 +1,4 @@
-#!/home/cintia/anaconda3/bin/python
+#!/usr/bin/env python
 
 """A script to detect regions >60 kb no spannned by paired-end BESs"""
 
