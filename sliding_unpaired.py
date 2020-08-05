@@ -39,7 +39,14 @@ for scf in scf_ls:
                 if count > 2 and item not in misa_dict:
                     misa_dict[item] = [start, end, min(containing["start"]), max(containing["end"]), orient]
                 elif count > 2 and item in misa_dict and end > misa_dict[item][1] and misa_dict[item][4] == orient:
-                    misa_dict[item][1], misa_dict[item][3] = end, max(containing["end"])
+                    #in case of different regions with same partner and orientation
+                    diff = start - misa_dict[item][1]
+                    if diff < window:
+                        misa_dict[item][1], misa_dict[item][3] = end, max(containing["end"])
+                    else:
+                        print("%s\t%s\t%s\t%s_bes_%s" % (scf, misa_dict[item][2], misa_dict[item][3], misa_dict[item][4].replace("+", "posi").replace("-", "nega"), item))
+                        misa_dict[item] = [start, end, min(containing["start"]), max(containing["end"]), orient]
+                        misa_dict[item] = [start, end, min(containing["start"]), max(containing["end"]), orient]
                 elif count > 2 and item in misa_dict and end > misa_dict[item][1] and misa_dict[item][4] != orient:
                     print("%s\t%s\t%s\t%s_bes_%s" % (scf, misa_dict[item][2], misa_dict[item][3], misa_dict[item][4].replace("+", "posi").replace("-", "nega"), item))
                     misa_dict[item] = [start, end, min(containing["start"]), max(containing["end"]), orient]
