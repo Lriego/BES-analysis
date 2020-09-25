@@ -3,7 +3,7 @@
 # "########"
 #
 # Example:
-# Rscript graphic_summary.R 790v2_Leon_blast.summary 4004 790v2_Leon_unpaired.bed graphic_summary.tiff
+# Rscript graphic_summary.R example_data/790v2_Leon_blast.summary 4004 example_data/790v2_Leon_ed_unp_short.bed graphic_summary.tiff
 # Copyright Cintia Gómez-Muñoz. 2019
 # cintia.gomez<at>ipicyt.edu.mx
 # -------------------------------------------------------------------------------
@@ -34,14 +34,14 @@ algBesDf <- data.frame("BESs group" = c("Aligned BESs", "Not aligned BESs"), "Va
 
 algPer <- round((algBesDf$Value*100)/BesNo, 2)
 
-algPlot <- ggplot(algBesDf, aes(x = "", y = algBesDf$Value, fill = algBesDf$BESs.group)
-                   ) + geom_bar(width = 1, stat = "identity"
-                   ) + coord_polar("y", start=0, direction = -1
-                   ) + scale_fill_manual(values = c("#4575B4", "#91BFDB")
-                   ) + guides(fill=guide_legend(title=NULL)
-                   ) + geom_text_repel(label = c(" ", paste(algPer[2], "%")), nudge_x = c(0, 0.8)
-                   ) + geom_text(label = c(paste(algPer[1], "%"), " "), position = position_stack(vjust = 0.5, reverse = TRUE)
-                   ) + theme_void()
+algPlot <- ggplot(algBesDf, aes(x = "", y = algBesDf$Value, fill = algBesDf$BESs.group)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y", start=0, direction = -1) +
+  scale_fill_manual(values = c("#4575B4", "#91BFDB")) +
+  guides(fill=guide_legend(title=NULL)) +
+  geom_text_repel(label = c(" ", paste(algPer[2], "%")), nudge_x = c(0, 0.8))+
+  geom_text(label = c(paste(algPer[1], "%"), " "), position = position_stack(vjust = 0.5, reverse = TRUE)) +
+  theme_void()
 
 
 # BESs type orientation
@@ -52,13 +52,13 @@ BesNoTot$BES.type <- factor(BesNoTot$BES.type, levels = rev(BesNoTot$BES.type))
 
 BesNoPer <- round((BesNoTot[,2]*100)/BesNo, 2)
 
-BesPlot <- ggplot(BesNoTot, aes(x = "", y = BesNoPer, fill = BesNoTot$BES.type)
-                   ) + geom_bar(width = 0.5, stat = "identity"
-                   ) + scale_fill_brewer(palette="RdYlBu"
-                   ) + guides(fill=guide_legend(title=NULL)
-                   ) + labs(x = "BESs type", y = "Percentage (%)"
-                   ) + geom_text(label = ifelse(BesNoPer > 1, paste(BesNoPer, "%"), ""), position = position_stack(vjust = 0.5)
-                   ) + theme_classic()
+BesPlot <- ggplot(BesNoTot, aes(x = "", y = BesNoPer, fill = BesNoTot$BES.type)) +
+  geom_bar(width = 0.5, stat = "identity") +
+  scale_fill_brewer(palette="RdYlBu") +
+  guides(fill=guide_legend(title=NULL)) +
+  labs(x = "BESs type", y = "Percentage (%)") +
+  geom_text(label = ifelse(BesNoPer > 1, paste(BesNoPer, "%"), ""), position = position_stack(vjust = 0.5))+
+  theme_classic()
 
 
 # Unpaired-end BESs
@@ -67,13 +67,13 @@ unpDf <- BesDf[c(7,6),]
 
 unpPer <- round(((unpDf[,2]*100) / BesNo), 2)
 
-unpPlot <- ggplot(unpDf, aes(x = unpDf$BES.type, y = unpPer, fill = unpDf$BES.type)
-                   ) + geom_bar(width = 0.5, stat = "identity", show.legend = FALSE
-                   ) + scale_fill_manual(values = c("#4575B4", "#FC8D59")
-                   ) + guides(fill=guide_legend(title=NULL)
-                   ) + labs(x = "Unpaired-end BESs", y = "Percentage (%)"
-                   ) + geom_text(label = paste(unpPer, "%"), position = position_stack(vjust = 0.5, reverse = TRUE)
-                   ) + theme_classic()
+unpPlot <- ggplot(unpDf, aes(x = unpDf$BES.type, y = unpPer, fill = unpDf$BES.type)) +
+  geom_bar(width = 0.5, stat = "identity", show.legend = FALSE) +
+  scale_fill_manual(values = c("#4575B4", "#FC8D59")) +
+  guides(fill=guide_legend(title=NULL)) +
+  labs(x = "Unpaired-end BESs", y = "Percentage (%)") +
+  geom_text(label = paste(unpPer, "%"), position = position_stack(vjust = 0.5, reverse = TRUE))+
+  theme_classic()
 
 
 # Consistent unpaired-end BESs
