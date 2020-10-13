@@ -36,7 +36,7 @@ The following pipeline runs in Linux based platforms. Additionally you should ha
 * **megablast** 2.6.0+
 * **blat** 36x2
 * **nucmer** 3.1
-* **bowtie2**2.3.4.1
+* **bowtie2** 2.3.4.1
 * **Python** version 3.7.0
 * **R** version 3.6.1
 
