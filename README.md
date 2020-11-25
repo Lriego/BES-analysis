@@ -4,7 +4,7 @@ Created: October 10th, 2019
 
 Updated: October 24th, 2019
 
-Authors: C. Gómez-Munñoz*, L.F. García-Ortega, J.I. Montalvo-Arredondo.
+Authors: C. Gómez-Muñoz*, L.F. García-Ortega, J.I. Montalvo-Arredondo.
 
 *cintia.gomez@ipicyt.edu.mx
 
