@@ -448,7 +448,7 @@ case "$STAGE" in
 				DIR_blat=`which blat`
 				if [ -z $DIR_blat ]; then
 					echo "blat is not istalled or is not included in your PATH"
-					echo "You can download it with the command: 'wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/'"
+					echo "You can download it with the command: 'wget http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/blat/blat'"
 					exit 0
 				fi
 				echo "BLAT alignment"
