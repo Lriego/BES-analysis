@@ -399,7 +399,7 @@ case "$STAGE" in
 				DIR_mega=`which megablast`
 				if [ -z $DIR_mega ]; then
 					echo "Error, megablast is not installed or is not included in your PATH"
-					echo "You can install it with the command: 'sudo apt-get install ncbi-blast+'"
+					echo "You can install it with the command: 'conda install -c bioconda blast-legacy'"
 					exit 0
 				fi
 
