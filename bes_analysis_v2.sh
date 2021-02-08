@@ -616,7 +616,7 @@ case "$STAGE" in
 
 				#Mapping with bowtie
 				echo "BWA alignment"
-				bwa mem $(dirname $GENOME)/bwa_indexes/$GENOME $INPUT > "$OUTPUT"/"$(basename "$INPUT" .fasta)_bwa.all"
+				bwa mem $(dirname $GENOME)/bwa_indexes/$(basename $GENOME) $INPUT > "$OUTPUT"/"$(basename "$INPUT" .fasta)_bwa.all"
 				grep "@" "$OUTPUT"/"$(basename "$INPUT" .fasta)_bwa.all" > "$OUTPUT"/"$(basename "$INPUT" .fasta)_bwa.out"
 				# Filter unmapped, secondary and supplementary alignments (i.e. 4 + 256 + 2048 = 2308)
 				samtools view -F 2308 "$OUTPUT"/"$(basename "$INPUT" .fasta)_bwa.all" >> "$OUTPUT"/"$(basename "$INPUT" .fasta)_bwa.out"
