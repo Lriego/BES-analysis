@@ -2,7 +2,7 @@
 
 Created: October 10th, 2019
 
-Updated: October 24th, 2019
+Updated: February 17th, 2021
 
 Authors: C. Gómez-Muñoz*, L.F. García-Ortega, J.I. Montalvo-Arredondo.
 
@@ -46,7 +46,7 @@ The script checks anyway if you have them installed and give generic instruction
 
 ## 3. Main Pipeline
 
-The script **bes_analysis.sh** calls in other programs but has the advantage that it automats the process. The script proceeds in five elegible stages:
+The script **bes_analysis.sh** calls in other programs but has the advantage that it automats the process. The script proceeds in five eligible stages:
 
 1. '**abi2fastq**' finds all Sanger reads in **AB1** format of a directory and convert them into **FASTQ** format.
 2. '**qual**' evaluates per base quality of the sequences a gives a report using FastQC.
@@ -57,12 +57,14 @@ The script **bes_analysis.sh** calls in other programs but has the advantage tha
   * MEGA (megablast)
   * BLAT
   * NUC (nucmer)
-  * BOW (bowtie2)
+  * BOW (bowtie)
+  * BOW2 (bowtie2)
+  * BWA
 
 
 ### 3.1. Convert AB1 files to FASTQ (abi2fastq)
 
-BESs are obtained through Sanger sequencing, therefore, the initial BESs file are in **AB1** format stored in a single directory. To convert such files to **FASTQ** format, a more suitable format for downstreams analysis, one can use the '**abi2fastq**' stage of the **bes_analysis.sh** script giving as input the sequence's directory.
+BESs are obtained through Sanger sequencing, therefore, the initial BESs file are in **AB1** format stored in a single directory. To convert such files to **FASTQ** format, a more suitable format for downstream analyses, one can use the '**abi2fastq**' stage of the **bes_analysis.sh** script giving as input the sequence's directory.
 
 ```bash
 ./bes_analysis.sh -s abi2fastq -i INPUT.directory
@@ -92,7 +94,15 @@ After running this stage, you can run again the '**qual**' stage to verify the s
 
 ### 3.4. Genome FASTA headers formatting (format)
 
-The pipeline requieres that the contigs size information of the reference genome is included in the header for downstream analysis. Therefore, before running the following stages, make sure that your genome FASTA headers have this format: `>sequence1|size1234`. If not, format your reference genome FASTA headers with the following command:
+The pipeline requieres that the contigs size information of the reference genome is included in the header for downstream analysis. Therefore, before running the following stages, make sure that your genome **FASTA** headers have this format: `>sequence1|size1234`. We recommend formatting your **FASTA** headers with:
+
+```bash
+Rscript format_genome.R genome.fasta out_name.fasta
+```
+
+The former script requieres R version 3.6.1 and [Biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html).
+
+Alternatively, you can format your reference genome **FASTA** headers with the following command:
 
 ```bash
 ./bes_analysis.sh -s format -i none -g GENOME.fasta
@@ -108,7 +118,7 @@ This stage is the main function of the script. The objective is to locate the se
 ./bes_analysis.sh -s align -i INPUT.file -g GENOME.fasta -m METHOD
 ```
 
-The script has the ability to align the BESs sequences (or any other sequences) using one of the five available aligning programs. These are BLAST, MEGABLAST, BLAT, NUCMER, and BOWTIE2. For that, you only need to subsititue method in the `-m` argument for 'BLAST', 'MEGA', 'BLAT', 'NUC' or 'BOW', respectively. For example:
+The script has the ability to align the BESs sequences (or any other sequences) using one of the available aligning programs. These are BLAST, MEGABLAST, BLAT, NUCMER, BOWTIE, BOWTIE2, and BWA. For that, you only need to subsititue method in the `-m` argument for 'BLAST', 'MEGA', 'BLAT', 'NUC', 'BOW', 'BOW2', or 'BWA', respectively. For example:
 
 ```bash
 ./bes_analysis.sh -s align -i INPUT.file -g GENOME.fasta -m BLAST
@@ -116,15 +126,15 @@ The script has the ability to align the BESs sequences (or any other sequences) 
 
 An additional optional argument for this stage is `-e` or E-value for BLAST and MEGABLAST. Defatul E-value is 0.000001.
 
-After the alignmet, the output of the methods that retrieves more than one alignment per sequence goes trough a filtering process in which the longest alignment is selected. In case of a tie, the firts alignment is selected. Then, the script converts any alignment output into **GFF3** format for easier visualization in the Integrative Genomics Viewer (IGV). Therefore, this script is also useful to align any other sequences and visualize them in the IGV. The script performs by default a screening calling in a Python script included in this repository (**screening.py**). This script classifies the BESs pairs according to their orientation in single-end, paired-end, unpaired-end, opposite, positive and negative. For the screening process to work, sequences form the same plasmid (paired-end sequences) must be next to each other in the initial file (for example, sequence_from_plasmid1.fw must be followed by sequence_from_plasmid1.rv, and so on). This screening option can be disabled by using the optional argument `-q no` (default is 'yes').
+After the alignmet, the output of the methods that retrieves more than one alignment per sequence goes trough a filtering process in which the longest or primary alignment is selected. In case of a tie, the firts alignment is selected. Then, the script converts any alignment output into **GFF3** format for easier visualization in the Integrative Genomics Viewer (IGV). Therefore, this script is also useful to align any other sequences and visualize them in the IGV. The script performs by default a screening calling in a Python script included in this repository (**screening.py**). This script classifies the BESs pairs according to their orientation in single-end, paired-end, unpaired-end, opposite, positive and negative. For the screening process to work, sequences form the same plasmid (paired-end sequences) must be next to each other in the initial file (for example, sequence_from_plasmid1.fw must be followed by sequence_from_plasmid1.rv, and so on). This screening option can be disabled by using the optional argument `-q no` (default is 'yes').
 
-The results stored are stored in a output directory called 'BES_out' (you can specify your own directory with the input argument `-o OUTPUT_DIR`) and consist of the alingmet method default output, and initial GFF3 file, a final formatted **GFF3**, and a summary table in a plain text file. The final formatted **GFF3** file can aid in visual inpsection in a genome browser, for example the IGV (Figure 2).
+The results stored are stored in a output directory called 'BES_out' (you can specify your own directory with the input argument `-o OUTPUT_DIR`). This directory consists of the alingmet method default output, an initial GFF3 file, a final formatted **GFF3**, and a summary table in a plain text file. The final formatted **GFF3** file can aid in visual inpsection in a genome browser, for example the IGV (Figure 2).
 
 ![Figure 2](images/visualization.png)
 
 **Figure 2.** Example vizualization of the formatted GFF3 file. The region of interest (top panel, I) was visualized in the IGV, along with the evidence information (bottom panel, II). a) Formatted GFF3 file of the BESs alignments. Paired-end alignments are shown with its simulated insert in green, unpaired-end BESs aligned positively and negatively are presented in yellow and purple, respectively; single alignmnets are shown in gray. Positive, negative and opposite alignments, although not shown in the image, are assigned the colors pink, cyan and red, respectively. b) Paired-end BESs scanning results (red line). c) Unpaired-end scanning results (orange lines).
 
-## 4. Extra analysis
+## 4. Extra analyses
 Regions not sustained by paired-end alignment are and indication of a misassembly, or strain specific differences; while region enriched with unpaired-end alignment suggest possible contig joins. Visual inpsection can be time consuming; therefore, two additional scripts that help to detect regions not spanned by paired-end alignments (**sliding_paired.py**) and regions enriched with unpaired-end alignments (**sliding_unpaired.py**) can be ran over the final formatted **GFF3** file. These scripts work using an sliding window algorithm and Pandas dataframes.
 
 ```
