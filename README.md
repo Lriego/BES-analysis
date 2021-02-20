@@ -2,7 +2,7 @@
 
 Created: October 10th, 2019
 
-Updated: February 17th, 2021
+Updated: February 19th, 2021
 
 Authors: C. Gómez-Muñoz*, L.F. García-Ortega, J.I. Montalvo-Arredondo.
 
@@ -42,7 +42,7 @@ The following pipeline runs in Linux based platforms. Additionally you should ha
 * **Python** version 3.7.0
 * **R** version 3.6.1
 
-The script checks anyway if you have them installed and give generic instructions to install them. The pipeline can be ran without some alignment programs only if they are not called in.
+The script checks anyway if you have them installed and give generic instructions to install them. The pipeline can be ran without some alignment programs, only if they are not called in.
 
 ## 3. Main Pipeline
 
@@ -61,6 +61,7 @@ The script **bes_analysis.sh** calls in other programs but has the advantage tha
   * BOW2 (bowtie2)
   * BWA
 
+Some of these stages can be bypassed, depending on the input data. If input files are from a different sequencing technology that retrieves files in **FASTQ** format, the first stage (‘**abi2fastq**’) can be omitted and directly proceed to the following quality assessment (‘**qual**’) and trimming (‘**trim**’) stages. Similarly, if the **FASTQ** reads were already evaluated and trimmed, the second and third stages can be skipped and proceed to the aligning stage (‘**align**’). This stage converts **FASTQ** sequences to **FASTA** format prior the alignment. If the input sequences are already in **FASTA** format, these sequences can be also directly introduced at this stage. As consequence, **FASTQ** and **FASTA** formats, besides **AB1** format, could be used with the pipeline. Considering that this pipeline has been optimized to analyze files at most 4000 sequences, some adjustments might be needed if the files contain more sequences.
 
 ### 3.1. Convert AB1 files to FASTQ (abi2fastq)
 
